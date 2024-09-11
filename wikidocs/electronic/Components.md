@@ -18,4 +18,31 @@ Es una aplicación que se ejecuta en el hardware de depuración (como el **BMP**
 - **Ejecución paso a paso**
 - **Sin necesidad de software intermedio**
 
-Componentes requeridos para la
+**Componentes requeridos para el flasheo del BMD**
+
+#####  **Software**
+- **OpenOCD** es una herramienta que permite flashear y depurar microcontroladores, y contiene muchos archivos de configuración para diferentes interfaces de depuración (como **ST-Link**) y diferentes tipos de microcontroladores (como **STM32F1**)
+- **Toolchain ARM GCC**, la librería de gcc :
+	- Descarga el archivo **tarball** (normalmente un archivo `.tar.bz2` o `.tar.xz`).
+	- https://developer.arm.com/downloads/-/gnu-rm 
+	- tar -xvf gcc-arm.tar.bz2
+	- agregar la ruta del compilador al PATH del sistema
+	- comprobar la versiòn del compilador : **arm-none-eabi-gcc --version**
+#####  **Hardware**
+- **ST-Link V2** 
+- **STM32F103C8T6** **(blue pill)**
+
+### **Construcción del black-magic.bin**
+Ejecutar los siguientes comandos :
+```shell
+# clonación recursiva del repositorio
+git clone --recursive https://github.com/blacksphere/blackmagic.git
+
+cd blackmagic
+
+# Para la **Blue Pill**, puedes especificar el **PROBE_HOST** como `stlink` y el **BLUEPILL=1** para compilar el firmware correcto.
+make PROBE_HOST=stlink BLUEPILL=1
+
+tree | grep bin
+
+```
