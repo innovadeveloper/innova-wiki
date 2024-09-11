@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wikidocs/electronic/Components.md",
+                "file": "wikidocs/electronic/Protocolos de depuración y programación.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "wikidocs/electronic/Components.md",
+                "file": "wikidocs/electronic/Protocolos de depuración y programación.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "wikidocs/electronic/Components.md",
+                "file": "wikidocs/electronic/Protocolos de depuración y programación.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "wikidocs/electronic/Components.md"
+                "file": "wikidocs/electronic/Protocolos de depuración y programación.md"
               }
             }
           }
@@ -148,6 +148,10 @@
   },
   "active": "91995435d8db71d4",
   "lastOpenFiles": [
+    "assets/electronic/jtag_connection_method.png",
+    "wikidocs/electronic/Protocolos de depuración y programación.md",
+    "assets/electronic/swd_connection_method.png",
+    "assets/electronic/gnu_debugger_logo.png",
     "wikidocs/electronic/Components.md",
     "assets/electronic",
     "wikidocs/electronic"
