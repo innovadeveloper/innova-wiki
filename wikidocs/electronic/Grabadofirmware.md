@@ -97,5 +97,146 @@ ST-Link Utility es una alternativa más antigua pero aún válida, si prefieres 
 
 Ambas herramientas son perfectamente capaces de flashear el firmware de Black Magic Debug en tu Blue Pill y puedes utilizarlas en lugar de OpenOCD si lo prefieres.
 
-¿Te gustaría más detalles sobre alguno de estos pasos o alguna recomendación adicional?
+### **Conexion y Grabado de firmware entre dos dispositivos**
+
+Una vez que hayas instalado el firmware de Black Magic Debug (BMP) en tu STM32 (Blue Pill), puedes utilizarla para programar y depurar otros microcontroladores STM32 a través de SWD (Serial Wire Debug). A continuación te guiaré paso a paso sobre cómo utilizar la Blue Pill con Black Magic Debug para programar otro microcontrolador STM32.
+
+Materiales requeridos:
+
+1. Blue Pill con Black Magic Debug (actuando como el depurador).
+
+
+2. Otro microcontrolador STM32 que quieras programar.
+
+
+3. Cables para realizar las conexiones SWD entre ambas placas.
+
+
+4. GDB (GNU Debugger) en tu computadora para comunicarte con la Blue Pill.
+
+
+5. Un entorno de programación para generar el archivo de firmware que deseas grabar en el STM32 objetivo (por ejemplo, STM32CubeIDE).
+
+
+
+Pasos para grabar código en otro STM32 a través de SWD:
+
+1. Conectar la Blue Pill al STM32 objetivo
+
+Primero, debes realizar las conexiones SWD entre la Blue Pill con BMP y el STM32 que deseas programar.
+
+Conexiones SWD:
+
+Blue Pill (BMP) -> STM32 objetivo:
+
+SWDIO (PB0 en Blue Pill) -> SWDIO en el STM32 objetivo.
+
+SWCLK (PA5 en Blue Pill) -> SWCLK en el STM32 objetivo.
+
+GND -> GND.
+
+VCC -> VCC (solo si deseas alimentar el STM32 objetivo desde la Blue Pill).
+
+
+Si deseas también controlar el reinicio del STM32 objetivo, puedes conectar el pin RESET de la Blue Pill al pin NRST del STM32 objetivo, aunque no siempre es necesario.
+
+
+
+2. Conectar la Blue Pill a tu computadora
+
+Conecta la Blue Pill (ahora con Black Magic Debug) a tu computadora a través de un cable USB. Debería ser detectada como un puerto serie.
+
+
+3. Iniciar GDB en tu computadora
+
+Abre una terminal en tu computadora y ejecuta GDB. Si estás usando STM32CubeIDE, este ya incluye GDB, pero también puedes usar una instalación independiente de GDB.
+
+Si estás en Linux o macOS, el dispositivo podría aparecer como /dev/ttyACM0 o similar. En Windows, aparecerá como un puerto COM (por ejemplo, COM3).
+
+Para iniciar GDB y conectarte a la Blue Pill con Black Magic Debug, usa el siguiente comando:
+
+arm-none-eabi-gdb
+
+
+4. Conectar GDB al servidor GDB en la Blue Pill
+
+Ahora que GDB está ejecutándose, debes conectarte al servidor GDB que está corriendo dentro de la Blue Pill (BMP). Usa el siguiente comando en la consola de GDB para conectarte:
+
+target extended-remote /dev/ttyACM0
+
+Asegúrate de reemplazar /dev/ttyACM0 con el nombre correcto del puerto donde está conectada tu Blue Pill. En Windows, sería algo como target extended-remote COM3.
+
+
+
+5. Detección del microcontrolador STM32 objetivo
+
+Después de conectarte a la Blue Pill, debes detectar el STM32 objetivo. Usa este comando en GDB para buscar el objetivo conectado a través de SWD:
+
+monitor swdp_scan
+
+Esto te mostrará los dispositivos conectados al bus SWD, donde debe aparecer el STM32 que deseas programar.
+
+
+6. Seleccionar el microcontrolador STM32 objetivo
+
+Después de hacer el escaneo, selecciona el objetivo con este comando en GDB:
+
+attach 1
+
+(Si 1 es el índice del STM32 objetivo que fue detectado en el escaneo anterior. Si no, ajusta el número al índice correcto).
+
+
+7. Cargar el firmware en el STM32 objetivo
+
+Ahora que estás conectado al STM32 objetivo, puedes cargar un archivo binario .bin o .elf que hayas generado previamente (por ejemplo, en STM32CubeIDE). Usa el siguiente comando para cargar el archivo en la memoria flash del STM32 objetivo:
+
+load path/to/firmware.bin
+
+Este comando grabará el archivo de firmware en la memoria del STM32.
+
+
+8. Verificar y reiniciar
+
+Una vez que el firmware ha sido grabado con éxito, puedes verificar que todo esté en orden. Si es necesario, puedes reiniciar el STM32 objetivo con el siguiente comando:
+
+monitor reset
+
+
+9. Ejecutar el programa
+
+Finalmente, puedes ejecutar el programa en el STM32 objetivo utilizando el comando:
+
+continue
+
+
+Esto permitirá que el STM32 objetivo comience a ejecutar el código que acabas de cargar.
+
+Resumen de los pasos:
+
+1. Conectar la Blue Pill (BMP) a través de SWD a tu STM32 objetivo.
+
+
+2. Conectar la Blue Pill (BMP) a tu computadora por USB.
+
+
+3. Iniciar GDB en tu computadora y conectarte a la Blue Pill.
+
+
+4. Detectar el microcontrolador STM32 objetivo con monitor swdp_scan.
+
+
+5. Cargar el archivo de firmware en el STM32 objetivo con el comando load.
+
+
+6. Ejecutar el programa o reiniciar el STM32 objetivo con monitor reset.
+
+
+
+Conclusión:
+
+Una vez que hayas configurado la Blue Pill como un Black Magic Probe, puedes usarla para programar y depurar otros microcontroladores STM32 de manera eficiente a través de SWD, todo controlado desde GDB. Este método te permite realizar tanto la programación como la depuración de manera rápida y efectiva sin necesidad de herramientas adicionales como ST-Link o J-Link.
+
+
+
+
 
