@@ -1,3 +1,12 @@
+Más información : 
+- https://hackaday.io/project/187043/instructions
+- https://www.printables.com/es/model/172889-stm32-blue-pill-case-blackmagic-programmer
+	- Información y descarga del binario para stm32 : 
+		- ![[Pasted image 20240912161835.png|300]]
+- https://github.com/blackmagic-debug/blackmagic/blob/main/src/platforms/stlink/platform.h
+	- ahì contiene todas las variables del pinout para stlink/stm32 : 
+		- **SWDIO**: Puerto **GPIOB**, Pin **14** (PB14)
+		- **SWCLK**: Puerto **GPIOA**, Pin **5** (PA5)
 ### Grabado de firmware en stm32
 
 ¡Sí! Puedes utilizar el ST-Link Utility o el STM32CubeProgrammer (anteriormente conocido como ST-Link Programmer) para flashear el firmware de Black Magic Debug en tu Blue Pill en lugar de usar OpenOCD. Ambas herramientas son proporcionadas por STMicroelectronics y son totalmente compatibles con los programadores ST-Link.
@@ -22,6 +31,13 @@ Sigue las instrucciones de instalación para tu sistema operativo (Windows, macO
 
 Conecta los pines SWDIO, SWCLK, GND, y VCC de tu ST-Link a los correspondientes pines de la Blue Pill.
 
+![[Pasted image 20240912143642.png|300]]
+![[Pasted image 20240912164602.png|400]]
+
+Activar el modo de bootloader para grabar código con el jumper **boot-0** en 1
+![[Pasted image 20240912144830.png|300]]
+
+![[Pasted image 20240912144941.png|400]]
 Conecta el ST-Link a tu computadora mediante el cable USB.
 
 
@@ -36,7 +52,7 @@ El programa detectará el microcontrolador STM32F103C8T6 de la Blue Pill.
 
 5. Cargar el archivo binario:
 
-En el menú principal, selecciona "Open File" y navega hasta el archivo blackmagic.bin que generaste en la compilación. Este archivo debería estar en el directorio src/ del repositorio que compilaste.
+En el menú principal, selecciona "Open File" y navega hasta el archivo **blackmagic.bin** que generaste en la compilación. Este archivo debería estar en el directorio src/ del repositorio que compilaste.
 
 
 
@@ -97,6 +113,8 @@ ST-Link Utility es una alternativa más antigua pero aún válida, si prefieres 
 
 Ambas herramientas son perfectamente capaces de flashear el firmware de Black Magic Debug en tu Blue Pill y puedes utilizarlas en lugar de OpenOCD si lo prefieres.
 
+
+![[Pasted image 20240912162001.png|300]]
 ### **Conexion y Grabado de firmware entre dos dispositivos**
 
 Una vez que hayas instalado el firmware de Black Magic Debug (BMP) en tu STM32 (Blue Pill), puedes utilizarla para programar y depurar otros microcontroladores STM32 a través de SWD (Serial Wire Debug). A continuación te guiaré paso a paso sobre cómo utilizar la Blue Pill con Black Magic Debug para programar otro microcontrolador STM32.
@@ -113,9 +131,12 @@ Materiales requeridos:
 
 
 4. GDB (GNU Debugger) en tu computadora para comunicarte con la Blue Pill.
-
-
-5. Un entorno de programación para generar el archivo de firmware que deseas grabar en el STM32 objetivo (por ejemplo, STM32CubeIDE).
+	1. Solo basta tener en el sistema "arm-none-eabi-gdb"
+```shell
+% which arm-none-eabi-gdb
+/usr/local/bin/arm-none-eabi-gdb 		
+```
+1. Un entorno de programación para generar el archivo de firmware que deseas grabar en el STM32 objetivo (por ejemplo, STM32CubeIDE).
 
 
 
@@ -125,19 +146,21 @@ Pasos para grabar código en otro STM32 a través de SWD:
 
 Primero, debes realizar las conexiones SWD entre la Blue Pill con BMP y el STM32 que deseas programar.
 
-Conexiones SWD:
 
+Conexiones SWD:
+![[Pasted image 20240912164108.png|400]]
 Blue Pill (BMP) -> STM32 objetivo:
 
-SWDIO (PB0 en Blue Pill) -> SWDIO en el STM32 objetivo.
+SWDIO (PB14 en Blue Pill) -> SWDIO en el STM32 objetivo.
 
 SWCLK (PA5 en Blue Pill) -> SWCLK en el STM32 objetivo.
 
 GND -> GND.
 
 VCC -> VCC (solo si deseas alimentar el STM32 objetivo desde la Blue Pill).
+![[Pasted image 20240912173232.png|400]]
 
-
+![[Pasted image 20240912173219.png|400]]
 Si deseas también controlar el reinicio del STM32 objetivo, puedes conectar el pin RESET de la Blue Pill al pin NRST del STM32 objetivo, aunque no siempre es necesario.
 
 
@@ -146,7 +169,11 @@ Si deseas también controlar el reinicio del STM32 objetivo, puedes conectar el 
 
 Conecta la Blue Pill (ahora con Black Magic Debug) a tu computadora a través de un cable USB. Debería ser detectada como un puerto serie.
 
+```shell
+# lista los dispositivos seriales (mac os)
+ls /dev/tty.*
 
+```
 3. Iniciar GDB en tu computadora
 
 Abre una terminal en tu computadora y ejecuta GDB. Si estás usando STM32CubeIDE, este ya incluye GDB, pero también puedes usar una instalación independiente de GDB.
