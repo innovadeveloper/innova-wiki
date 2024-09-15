@@ -31,7 +31,7 @@ Sigue las instrucciones de instalación para tu sistema operativo (Windows, macO
 
 Conecta los pines SWDIO, SWCLK, GND, y VCC de tu ST-Link a los correspondientes pines de la Blue Pill.
 
-![[Pasted image 20240912143642.png|300]]
+![[Pasted image 20240912143642.png|600]]
 ![[Pasted image 20240912164602.png|400]]
 
 Activar el modo de bootloader para grabar código con el jumper **boot-0** en 1
@@ -114,7 +114,7 @@ ST-Link Utility es una alternativa más antigua pero aún válida, si prefieres 
 Ambas herramientas son perfectamente capaces de flashear el firmware de Black Magic Debug en tu Blue Pill y puedes utilizarlas en lugar de OpenOCD si lo prefieres.
 
 
-![[Pasted image 20240912162001.png|300]]
+![[Pasted image 20240912162001.png|800]]
 ### **Conexion y Grabado de firmware entre dos dispositivos**
 
 Una vez que hayas instalado el firmware de Black Magic Debug (BMP) en tu STM32 (Blue Pill), puedes utilizarla para programar y depurar otros microcontroladores STM32 a través de SWD (Serial Wire Debug). A continuación te guiaré paso a paso sobre cómo utilizar la Blue Pill con Black Magic Debug para programar otro microcontrolador STM32.
@@ -148,7 +148,7 @@ Primero, debes realizar las conexiones SWD entre la Blue Pill con BMP y el STM32
 
 
 Conexiones SWD:
-![[Pasted image 20240912164108.png|400]]
+![[Pasted image 20240912164108.png|800]]
 Blue Pill (BMP) -> STM32 objetivo:
 
 SWDIO (PB14 en Blue Pill) -> SWDIO en el STM32 objetivo.
@@ -175,58 +175,100 @@ ls /dev/tty.*
 
 ```
 3. Iniciar GDB en tu computadora
+```shell
 
+# listar los periféricos seriales
+
+ls /dev/tty.*
+# listar los perifericos debugger de entrada
+ls -l /dev/cu.usbmodem*
+
+# conectarse y grabar el firmware
+arm-none-eabi-gdb /Users/kenny/Files/TMP/firmwares/blinkingled.elf
+(gdb) target extended-remote /dev/cu.usbmodem7EB87A971
+	Remote debugging using /dev/cu.usbmodem7EB87A971
+(gdb) monitor swdp_scan
+	Target voltage: 2.31V
+	Available Targets:
+	No. Att Driver
+	 1      STM32F1 L/M density M3
+(gdb) attach 1
+	Attaching to program: /Users/kenny/Files/TMP/firmwares/blinkingled.elf, Remote target
+	0x1ffff1ec in ?? ()
+(gdb) load
+	Loading section .isr_vector, size 0x10c lma 0x8000000
+	Loading section .text, size 0x10e4 lma 0x800010c
+	Loading section .rodata, size 0x24 lma 0x80011f0
+	Loading section .init_array, size 0x4 lma 0x8001214
+	Loading section .fini_array, size 0x4 lma 0x8001218
+	Loading section .data, size 0xc lma 0x800121c
+	Start address 0x0800036c, load size 4648
+	Transfer rate: 14 KB/sec, 464 bytes/write.
+(gdb) monitor reset halt 
+	You are now detached from the previous target.
+(gdb) continue
+	Continuing.
+	warning: Remote failure reply: E01
+	Could not read registers; remote failure reply 'EFF'
+
+```
 Abre una terminal en tu computadora y ejecuta GDB. Si estás usando STM32CubeIDE, este ya incluye GDB, pero también puedes usar una instalación independiente de GDB.
 
 Si estás en Linux o macOS, el dispositivo podría aparecer como /dev/ttyACM0 o similar. En Windows, aparecerá como un puerto COM (por ejemplo, COM3).
 
 Para iniciar GDB y conectarte a la Blue Pill con Black Magic Debug, usa el siguiente comando:
 
+```
 arm-none-eabi-gdb
-
+```
 
 4. Conectar GDB al servidor GDB en la Blue Pill
 
 Ahora que GDB está ejecutándose, debes conectarte al servidor GDB que está corriendo dentro de la Blue Pill (BMP). Usa el siguiente comando en la consola de GDB para conectarte:
 
+```
 target extended-remote /dev/ttyACM0
+```
 
 Asegúrate de reemplazar /dev/ttyACM0 con el nombre correcto del puerto donde está conectada tu Blue Pill. En Windows, sería algo como target extended-remote COM3.
-
-
 
 5. Detección del microcontrolador STM32 objetivo
 
 Después de conectarte a la Blue Pill, debes detectar el STM32 objetivo. Usa este comando en GDB para buscar el objetivo conectado a través de SWD:
 
+```
 monitor swdp_scan
+```
 
 Esto te mostrará los dispositivos conectados al bus SWD, donde debe aparecer el STM32 que deseas programar.
-
 
 6. Seleccionar el microcontrolador STM32 objetivo
 
 Después de hacer el escaneo, selecciona el objetivo con este comando en GDB:
 
+```
 attach 1
+```
 
 (Si 1 es el índice del STM32 objetivo que fue detectado en el escaneo anterior. Si no, ajusta el número al índice correcto).
-
 
 7. Cargar el firmware en el STM32 objetivo
 
 Ahora que estás conectado al STM32 objetivo, puedes cargar un archivo binario .bin o .elf que hayas generado previamente (por ejemplo, en STM32CubeIDE). Usa el siguiente comando para cargar el archivo en la memoria flash del STM32 objetivo:
 
+```
 load path/to/firmware.bin
+```
 
 Este comando grabará el archivo de firmware en la memoria del STM32.
-
 
 8. Verificar y reiniciar
 
 Una vez que el firmware ha sido grabado con éxito, puedes verificar que todo esté en orden. Si es necesario, puedes reiniciar el STM32 objetivo con el siguiente comando:
 
+```
 monitor reset
+```
 
 
 9. Ejecutar el programa
