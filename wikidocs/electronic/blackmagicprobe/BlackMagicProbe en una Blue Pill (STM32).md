@@ -3,7 +3,7 @@ En este **wikidoc** se presenta el siguiente alcance con el objetivo de mostrar 
 - Presentación del Black Magic Probe [[wd_BlackMagicProbe Presentación]]
 - Servidor GDB y otras implementaciones (OpenCD) [[wd_ServidorGDB]]
 - Requerimientos [[wd_Requerimientos Black Magic Probe]]
-- Construcción y Grabado del firmware black_magic.duf.bin, black_magic.bin [[ws_Construcción y Grabado del firmware black_magic.duf.bin, black_magic.bin]]
+- Construcción y Grabado del firmware black_magic.duf.bin, black_magic.bin [[wd_Construcción y Grabado del firmware black_magic.duf.bin, black_magic.bin]]
 	- Grabado de firmware black_magic.duf.bin por SWD
 	- Grabado de firmware black_magic.bin por USB
 	- Detección de black_magic_probe
