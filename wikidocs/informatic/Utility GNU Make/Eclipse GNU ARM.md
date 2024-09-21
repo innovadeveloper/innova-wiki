@@ -1,6 +1,20 @@
 ##### Configuración del entorno
 
-
+- Descargar e instalar en el sistema la cadena de herramientas de compilación 
+	- https://developer.arm.com/downloads/-/gnu-rm
+- Descargar e instalar Eclipse Embedded for CC Developers
+	- https://www.eclipse.org/downloads/packages/release/2024-09/r/eclipse-ide-embedded-cc-developers
+	- Más info :
+		- https://eclipse-embed-cdt.github.io/plugins/install/
+		- Ese ide ya incluye :
+			- the **Eclipse IDE for C/C++ Developers** standard distribution with the **Eclipse Embedded CDT plug-ins**
+- Descargar e instalar plugin GNU MCU Eclipse Plugin a través del market place de Eclipse : 
+	- ![[Screenshot_20240921-081314.jpg]]
+	- ![[Screenshot_20240921-081348.jpg]]
+	- ![[Screenshot_20240921-074202.jpg]]
+- Configurar el tool chain en eclipse :
+	- Ve a **Window > Preferences > C/C++ > Build > Global Tools Paths**.
+	- Agrega la ruta al compilador arm-none-eabi-gcc en la sección Cross GCC Toolchain Path.
 
 ##### Importar un proyecto con compilador makefile
 
