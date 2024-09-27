@@ -33,8 +33,11 @@ $$
 				Frecuencia_baudios=16×(103+1)16000000​=9600​​
 		$$
 
-Sustituyendo el valor de 103:
-
-Frecuencia_baudios=16 000 00016×(103+1)=9600Frecuencia\_baudios = \frac{16 \, 000 \, 000}{16 \times (103 + 1)} = 9600Frecuencia_baudios=16×(103+1)16000000​=9600
-- Presentación del Black Magic Probe [[wd_BlackMagicProbe Presentación]]
-- Servidor GDB y otras implementaciones (OpenCD) [[wd_ServidorGDB]]
+- Inserción de código para configurar el UBRR : 
+	```c
+unsigned int ubrr = 103;  // UBRR para 9600 baudios y 16 MHz
+UBRR0H = (unsigned char)(ubrr >> 8);
+UBRR0L = (unsigned char)ubrr;
+UCSR0B = (1 << RXEN0) | (1 << TXEN0);  // Habilitar receptor y transmisor
+UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Configurar 8 bits de datos
+```
